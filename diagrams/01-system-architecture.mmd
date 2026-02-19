@@ -1,0 +1,146 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#ff6b6b','primaryTextColor':'#fff','primaryBorderColor':'#7C0000','lineColor':'#F8B229','secondaryColor':'#006100','tertiaryColor':'#fff'}}}%%
+
+graph TB
+    subgraph "Client Layer - Frontend (Next.js 14)"
+        UI[React UI Components]
+        Pages[Next.js Pages & Routes]
+        Redux[Redux Store<br/>State Management]
+        Hooks[Custom Hooks<br/>useAuth, useJobs, etc.]
+    end
+
+    subgraph "API Gateway - Next.js API Routes"
+        AuthAPI["/api/auth/*<br/>Login, Signup, Session"]
+        JobAPI["/api/jobs/*<br/>CRUD Operations"]
+        AppAPI["/api/applications/*<br/>Application Management"]
+        EmployerAPI["/api/employer/*<br/>Employer Dashboard"]
+        AdminAPI["/api/admin/*<br/>Admin Controls"]
+        SavedAPI["/api/saved-jobs/*<br/>Bookmark Management"]
+    end
+
+    subgraph "Middleware & Security"
+        Middleware[Next.js Middleware<br/>JWT Verification]
+        RBAC["Role-Based Access Control<br/>Student, Employer, Admin"]
+        AuthCheck[Authentication Check<br/>Approval Status Validation]
+    end
+
+    subgraph "Business Logic Layer"
+        AuthHandler[Authentication Handler<br/>Password Hashing, JWT]
+        JobService[Job Service<br/>Search, Filter, CRUD]
+        AppService[Application Service<br/>Status Tracking, Stages]
+        ContractService[Contract Service<br/>Creation, E-Signature, Renewal]
+        MessageService[Messaging Service<br/>Stage-Based Communication]
+        AIService[AI Recommendation Service<br/>ml-knn Algorithm]
+        NotifyService[Notification Service<br/>Email & In-App Alerts]
+        AdminService[Admin Service<br/>User Approval, Moderation]
+    end
+
+    subgraph "Data Access Layer"
+        Mongoose[Mongoose ODM]
+        Models[Data Models<br/>User, Job, Application, Contract, Message]
+    end
+
+    subgraph "Database - MongoDB"
+        UserCollection[(Users Collection<br/>Student, Employer, Admin)]
+        JobCollection[(Jobs Collection<br/>Active, Expired, Archived)]
+        AppCollection[(Applications Collection<br/>Multi-Stage Tracking)]
+        ContractCollection[(Contracts Collection<br/>NDAs, Employment Agreements)]
+        MessageCollection[(Messages Collection<br/>Stage-Based Threads)]
+        AnalyticsCollection[(Analytics Collection<br/>Metrics & Reports)]
+    end
+
+    subgraph "External Services & Integrations"
+        Cloudinary[Cloudinary<br/>File & Document Storage]
+        EmailService[Email Service<br/>SMTP/Nodemailer]
+        ESignature[E-Signature Service<br/>Digital Signature API]
+        MLService[ML.js / ml-knn<br/>Recommendation Engine]
+    end
+
+    subgraph "User Roles"
+        Student[Student/Candidate<br/>Job Search, Apply, Track]
+        Employer[Employer/Organization<br/>Post Jobs, Review, Hire]
+        Admin[Admin<br/>Platform Management]
+    end
+
+    %% Client to API Flow
+    UI --> Pages
+    Pages --> Redux
+    Redux --> Hooks
+    Hooks --> AuthAPI
+    Hooks --> JobAPI
+    Hooks --> AppAPI
+    Hooks --> EmployerAPI
+    Hooks --> AdminAPI
+    Hooks --> SavedAPI
+
+    %% API to Middleware
+    AuthAPI --> Middleware
+    JobAPI --> Middleware
+    AppAPI --> Middleware
+    EmployerAPI --> Middleware
+    AdminAPI --> Middleware
+    SavedAPI --> Middleware
+
+    %% Middleware to Business Logic
+    Middleware --> RBAC
+    RBAC --> AuthCheck
+    AuthCheck --> AuthHandler
+    AuthCheck --> JobService
+    AuthCheck --> AppService
+    AuthCheck --> ContractService
+    AuthCheck --> MessageService
+    AuthCheck --> AIService
+    AuthCheck --> AdminService
+
+    %% Business Logic to Data Access
+    AuthHandler --> Mongoose
+    JobService --> Mongoose
+    AppService --> Mongoose
+    ContractService --> Mongoose
+    MessageService --> Mongoose
+    AIService --> Mongoose
+    NotifyService --> Mongoose
+    AdminService --> Mongoose
+
+    %% Data Access to Database
+    Mongoose --> Models
+    Models --> UserCollection
+    Models --> JobCollection
+    Models --> AppCollection
+    Models --> ContractCollection
+    Models --> MessageCollection
+    Models --> AnalyticsCollection
+
+    %% External Service Integrations
+    ContractService --> Cloudinary
+    ContractService --> ESignature
+    AppService --> Cloudinary
+    NotifyService --> EmailService
+    AIService --> MLService
+    AIService --> JobCollection
+    AIService --> AppCollection
+    AIService --> UserCollection
+
+    %% User Access Points
+    Student --> Pages
+    Employer --> Pages
+    Admin --> Pages
+
+    %% Styling
+    classDef frontend fill:#4ecdc4,stroke:#333,stroke-width:2px,color:#000
+    classDef api fill:#45b7d1,stroke:#333,stroke-width:2px,color:#000
+    classDef middleware fill:#f9ca24,stroke:#333,stroke-width:2px,color:#000
+    classDef business fill:#6c5ce7,stroke:#333,stroke-width:2px,color:#fff
+    classDef data fill:#a29bfe,stroke:#333,stroke-width:2px,color:#fff
+    classDef database fill:#fd79a8,stroke:#333,stroke-width:2px,color:#000
+    classDef external fill:#00b894,stroke:#333,stroke-width:2px,color:#000
+    classDef user fill:#e17055,stroke:#333,stroke-width:2px,color:#fff
+
+    class UI,Pages,Redux,Hooks frontend
+    class AuthAPI,JobAPI,AppAPI,EmployerAPI,AdminAPI,SavedAPI api
+    class Middleware,RBAC,AuthCheck middleware
+    class AuthHandler,JobService,AppService,ContractService,MessageService,AIService,NotifyService,AdminService business
+    class Mongoose,Models data
+    class UserCollection,JobCollection,AppCollection,ContractCollection,MessageCollection,AnalyticsCollection database
+    class Cloudinary,EmailService,ESignature,MLService external
+    class Student,Employer,Admin user
+

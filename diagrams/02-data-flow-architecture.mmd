@@ -1,0 +1,149 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#3498db','primaryTextColor':'#fff','primaryBorderColor':'#2980b9','lineColor':'#34495e','secondaryColor':'#2ecc71','tertiaryColor':'#fff'}}}%%
+
+sequenceDiagram
+    participant User as 👤 User<br/>(Student/Employer/Admin)
+    participant Frontend as 🖥️ Frontend<br/>(Next.js Pages)
+    participant Middleware as 🔒 Middleware<br/>(JWT Auth)
+    participant API as 🔌 API Route<br/>(Next.js API)
+    participant Service as ⚙️ Business Logic<br/>(Service Layer)
+    participant DB as 💾 MongoDB<br/>(Database)
+    participant External as 🌐 External Services<br/>(Cloudinary, Email, ML)
+
+    Note over User,External: Authentication Flow
+    User->>Frontend: Login Request (Email, Password)
+    Frontend->>API: POST /api/auth/login
+    API->>Service: Verify Credentials
+    Service->>DB: Query User Collection
+    DB-->>Service: User Data
+    Service->>Service: Hash Password Check
+    Service->>Service: Generate JWT Token
+    Service-->>API: Token + User Data
+    API-->>Frontend: Set HttpOnly Cookie + Response
+    Frontend-->>User: Redirect to Dashboard
+
+    Note over User,External: Job Application Flow
+    User->>Frontend: Browse Jobs / Search
+    Frontend->>API: GET /api/jobs?filters
+    API->>Middleware: Verify JWT Token
+    Middleware-->>API: Valid Token
+    API->>Service: Fetch Jobs with Filters
+    Service->>DB: Query Jobs Collection
+    DB-->>Service: Job Listings
+    Service->>Service: Filter Active Jobs Only
+    Service-->>API: Filtered Jobs
+    API-->>Frontend: Job Data
+    Frontend-->>User: Display Jobs
+
+    User->>Frontend: Apply for Job
+    Frontend->>API: POST /api/jobs/[id]/apply
+    API->>Middleware: Verify Token & Role
+    Middleware-->>API: Student Role Valid
+    API->>Service: Create Application
+    Service->>DB: Insert Application Record
+    Service->>External: Upload CV to Cloudinary
+    External-->>Service: CV URL
+    Service->>DB: Update Application with CV URL
+    Service->>External: Send Notification Email
+    DB-->>Service: Application Created
+    Service-->>API: Application Data
+    API-->>Frontend: Success Response
+    Frontend-->>User: Application Submitted
+
+    Note over User,External: Application Tracking Flow
+    User->>Frontend: View Application Status
+    Frontend->>API: GET /api/applications/[id]
+    API->>Middleware: Verify Token
+    API->>Service: Fetch Application
+    Service->>DB: Query Application + Stages
+    DB-->>Service: Application with Status
+    Service-->>API: Application Data
+    API-->>Frontend: Status Information
+    Frontend-->>User: Display Status Dashboard
+
+    Note over User,External: AI Recommendation Flow
+    User->>Frontend: View Dashboard
+    Frontend->>API: GET /api/jobs/recommended
+    API->>Middleware: Verify Token
+    API->>Service: Get Recommendations
+    Service->>DB: Fetch User Profile & History
+    Service->>DB: Fetch All Active Jobs
+    Service->>External: ML Service (ml-knn)
+    External->>External: Calculate Similarity Scores
+    External-->>Service: Recommended Job IDs
+    Service->>DB: Fetch Recommended Jobs
+    DB-->>Service: Job Details
+    Service-->>API: Recommended Jobs
+    API-->>Frontend: Recommendations
+    Frontend-->>User: Display Recommended Jobs
+
+    Note over User,External: Digital Contract Flow
+    User->>Frontend: Create Contract
+    Frontend->>API: POST /api/contracts/create
+    API->>Middleware: Verify Token & Role
+    Middleware-->>API: Employer Role Valid
+    API->>Service: Create Contract Template
+    Service->>DB: Store Contract Draft
+    Service->>External: Generate Contract PDF
+    External-->>Service: Contract Document
+    Service->>External: Upload to Cloudinary
+    External-->>Service: Document URL
+    Service->>DB: Update Contract with URL
+    Service->>External: Send E-Signature Request
+    External-->>Service: Signature Link
+    Service-->>API: Contract Created
+    API-->>Frontend: Contract Data
+    Frontend-->>User: Contract Ready for Signing
+
+    Note over User,External: Stage-Based Messaging Flow
+    User->>Frontend: Send Message
+    Frontend->>API: POST /api/messages/send
+    API->>Middleware: Verify Token
+    API->>Service: Validate Stage Requirement
+    Service->>DB: Check Application Stage
+    DB-->>Service: Current Stage
+    alt Stage Allows Messaging
+        Service->>DB: Store Message
+        Service->>External: Send Notification
+        Service-->>API: Message Sent
+        API-->>Frontend: Success
+    else Stage Doesn't Allow
+        Service-->>API: Error: Stage Restriction
+        API-->>Frontend: Error Message
+    end
+    Frontend-->>User: Message Status
+
+    Note over User,External: Admin Approval Flow
+    User->>Frontend: Sign Up (Employer/Student)
+    Frontend->>API: POST /api/auth/signup
+    API->>Service: Create User Account
+    Service->>DB: Insert User (isApproved: false)
+    Service->>External: Send Approval Notification
+    DB-->>Service: User Created
+    Service-->>API: User Data
+    API-->>Frontend: Pending Approval
+    Frontend-->>User: Redirect to Pending Page
+
+    Admin->>Frontend: View Pending Users
+    Frontend->>API: GET /api/admin/pending-users
+    API->>Middleware: Verify Admin Role
+    API->>Service: Fetch Pending Users
+    Service->>DB: Query Users (isApproved: false)
+    DB-->>Service: Pending Users List
+    Service-->>API: Users Data
+    API-->>Frontend: Pending Users
+    Frontend-->>Admin: Display List
+
+    Admin->>Frontend: Approve User
+    Frontend->>API: POST /api/admin/approve-user
+    API->>Service: Update Approval Status
+    Service->>DB: Update User (isApproved: true)
+    Service->>External: Send Approval Email
+    DB-->>Service: User Approved
+    Service-->>API: Success
+    API-->>Frontend: User Approved
+    Frontend-->>Admin: Confirmation
+
+
+
+
+

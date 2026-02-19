@@ -1,0 +1,85 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#9b59b6','primaryTextColor':'#fff','primaryBorderColor':'#8e44ad','lineColor':'#34495e','secondaryColor':'#3498db','tertiaryColor':'#fff'}}}%%
+
+stateDiagram-v2
+    [*] --> Draft: Student Creates Application
+    
+    Draft --> Submitted: Submit Application<br/>(CV, Cover Letter)
+    
+    Submitted --> UnderReview: Employer Receives Application
+    
+    UnderReview --> Shortlisted: Employer Reviews & Shortlists
+    
+    UnderReview --> Rejected: Employer Rejects Application
+    
+    Shortlisted --> InterviewScheduled: Schedule Interview<br/>(Stage 1: Initial)
+    
+    InterviewScheduled --> InterviewCompleted: Complete Interview
+    
+    InterviewCompleted --> TechnicalRound: Pass Initial Interview<br/>(Stage 2: Technical)
+    
+    InterviewCompleted --> Rejected: Fail Interview
+    
+    TechnicalRound --> TechnicalCompleted: Complete Technical Round
+    
+    TechnicalCompleted --> FinalRound: Pass Technical<br/>(Stage 3: Final)
+    
+    TechnicalCompleted --> Rejected: Fail Technical
+    
+    FinalRound --> FinalCompleted: Complete Final Round
+    
+    FinalCompleted --> OfferExtended: Pass All Rounds<br/>(Stage 4: Offer)
+    
+    FinalCompleted --> Rejected: Fail Final Round
+    
+    OfferExtended --> ContractSent: Student Accepts Offer
+    
+    OfferExtended --> OfferDeclined: Student Declines Offer
+    
+    ContractSent --> ContractSigned: E-Signature Completed<br/>(Stage 5: Contract)
+    
+    ContractSigned --> Hired: Contract Active<br/>(Stage 6: Hired)
+    
+    ContractSigned --> ContractDissolved: Contract Dissolved<br/>(Penalty Applied if Applicable)
+    
+    Rejected --> [*]: Application Closed
+    
+    OfferDeclined --> [*]: Application Closed
+    
+    ContractDissolved --> [*]: Application Closed
+    
+    Hired --> [*]: Application Complete
+    
+    note right of Draft
+        Application can be saved
+        as draft before submission
+    end note
+    
+    note right of Submitted
+        Messaging enabled after
+        this stage
+    end note
+    
+    note right of Shortlisted
+        Email notification sent
+        to candidate
+    end note
+    
+    note right of InterviewScheduled
+        Interview details sent
+        via email & in-app
+    end note
+    
+    note right of ContractSent
+        Digital contract created
+        E-signature required
+    end note
+    
+    note right of ContractSigned
+        Contract stored in
+        document repository
+    end note
+
+
+
+
+

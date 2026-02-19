@@ -1,0 +1,214 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e74c3c','primaryTextColor':'#fff','primaryBorderColor':'#c0392b','lineColor':'#34495e','secondaryColor':'#3498db','tertiaryColor':'#fff'}}}%%
+
+erDiagram
+    STUDENT ||--o{ JOB_APPLICATION : applies
+    STUDENT ||--o{ SAVED_JOB : saves
+    STUDENT ||--o{ MESSAGE : sends
+    STUDENT ||--o{ CONTRACT : signs
+    
+    EMPLOYER ||--o{ JOB : posts
+    EMPLOYER ||--o{ JOB_APPLICATION : receives
+    EMPLOYER ||--o{ MESSAGE : sends
+    EMPLOYER ||--o{ CONTRACT : creates
+    
+    ADMIN ||--o{ USER_APPROVAL : manages
+    ADMIN ||--o{ SYSTEM_ACTIVITY : monitors
+    
+    JOB ||--o{ JOB_APPLICATION : receives
+    JOB ||--o{ SAVED_JOB : "is saved"
+    
+    JOB_APPLICATION ||--o{ APPLICATION_STAGE : has
+    JOB_APPLICATION ||--o{ MESSAGE : "has messages"
+    
+    CONTRACT ||--o{ CONTRACT_SIGNATURE : has
+    CONTRACT ||--o{ CONTRACT_HISTORY : "has history"
+    
+    STUDENT {
+        ObjectId _id PK
+        string email UK
+        string password
+        string firstName
+        string lastName
+        string phone
+        string location
+        array education
+        array skills
+        string cvUrl
+        string profileImage
+        enum role "student"
+        enum isApproved "pending|approved|rejected"
+        date createdAt
+        date updatedAt
+    }
+    
+    EMPLOYER {
+        ObjectId _id PK
+        string email UK
+        string password
+        string companyName
+        string companyDescription
+        string location
+        string website
+        string phone
+        string profileImage
+        enum role "employer"
+        enum isApproved "pending|approved|rejected"
+        date createdAt
+        date updatedAt
+    }
+    
+    ADMIN {
+        ObjectId _id PK
+        string email UK
+        string password
+        string name
+        string image
+        enum role "admin"
+        date createdAt
+        date updatedAt
+    }
+    
+    JOB {
+        ObjectId _id PK
+        string title
+        text description
+        string company
+        string location
+        enum type "full-time|part-time|internship"
+        string salary
+        array requirements
+        ObjectId employerId FK
+        enum status "active|expired|filled|archived"
+        date expiryDate
+        date createdAt
+        date updatedAt
+    }
+    
+    JOB_APPLICATION {
+        ObjectId _id PK
+        ObjectId jobId FK
+        ObjectId studentId FK
+        enum status "pending|accepted|rejected"
+        string cvUrl
+        text coverLetter
+        enum currentStage "submitted|under-review|shortlisted|interview|technical|final|offer|contract|hired"
+        date createdAt
+        date updatedAt
+    }
+    
+    APPLICATION_STAGE {
+        ObjectId _id PK
+        ObjectId applicationId FK
+        enum stage "submitted|under-review|shortlisted|interview|technical|final|offer|contract|hired|rejected"
+        string notes
+        date scheduledDate
+        date completedDate
+        ObjectId updatedBy FK
+        date createdAt
+    }
+    
+    SAVED_JOB {
+        ObjectId _id PK
+        ObjectId studentId FK
+        ObjectId jobId FK
+        date savedAt
+    }
+    
+    MESSAGE {
+        ObjectId _id PK
+        ObjectId applicationId FK
+        ObjectId senderId FK
+        enum senderRole "student|employer"
+        ObjectId receiverId FK
+        enum receiverRole "student|employer"
+        text content
+        enum stage "submitted|shortlisted|interview|technical|final|offer"
+        boolean isRead
+        date createdAt
+    }
+    
+    CONTRACT {
+        ObjectId _id PK
+        ObjectId employerId FK
+        ObjectId studentId FK
+        ObjectId applicationId FK
+        string contractType "nda|employment"
+        text contractContent
+        string templateId
+        string documentUrl
+        enum status "draft|sent|signed|active|renewed|dissolved"
+        date startDate
+        date endDate
+        date signedDate
+        number penaltyAmount
+        text dissolutionReason
+        date createdAt
+        date updatedAt
+    }
+    
+    CONTRACT_SIGNATURE {
+        ObjectId _id PK
+        ObjectId contractId FK
+        ObjectId signerId FK
+        enum signerRole "employer|student"
+        string signatureData
+        string ipAddress
+        date signedAt
+    }
+    
+    CONTRACT_HISTORY {
+        ObjectId _id PK
+        ObjectId contractId FK
+        enum action "created|sent|signed|renewed|dissolved"
+        text notes
+        ObjectId updatedBy FK
+        date createdAt
+    }
+    
+    USER_APPROVAL {
+        ObjectId _id PK
+        ObjectId userId FK
+        enum userRole "student|employer"
+        enum status "pending|approved|rejected"
+        ObjectId approvedBy FK
+        text rejectionReason
+        date reviewedAt
+        date createdAt
+    }
+    
+    SYSTEM_ACTIVITY {
+        ObjectId _id PK
+        enum activityType "user_signup|user_approval|job_post|application|contract|message"
+        ObjectId userId FK
+        enum userRole "student|employer|admin"
+        text description
+        json metadata
+        date createdAt
+    }
+    
+    NOTIFICATION {
+        ObjectId _id PK
+        ObjectId userId FK
+        enum userRole "student|employer|admin"
+        enum type "application_update|interview_scheduled|contract_sent|system_announcement"
+        string title
+        text content
+        string link
+        boolean isRead
+        date createdAt
+    }
+    
+    AI_RECOMMENDATION {
+        ObjectId _id PK
+        ObjectId userId FK
+        ObjectId jobId FK
+        number similarityScore
+        array matchedSkills
+        enum recommendationType "collaborative|content-based"
+        date createdAt
+    }
+
+
+
+
+

@@ -1,0 +1,94 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#d35400','primaryTextColor':'#fff','primaryBorderColor':'#a04000','lineColor':'#34495e','secondaryColor':'#3498db','tertiaryColor':'#fff'}}}%%
+
+graph LR
+    subgraph "✅ Completed Modules"
+        AuthModule[🔐 Authentication Module<br/>✅ JWT-based Auth<br/>✅ Role-based Access<br/>✅ User Registration<br/>✅ Login/Logout]
+        UserModule[👤 User Management<br/>✅ Student Profile<br/>✅ Employer Profile<br/>✅ Admin Profile<br/>✅ Approval System]
+        JobModule[💼 Job Posting Module<br/>✅ Create Job<br/>✅ List Jobs<br/>✅ Job Details<br/>✅ Basic Filters]
+        AppModule[📝 Application Module<br/>✅ Submit Application<br/>✅ View Applications<br/>✅ Basic Status Tracking]
+    end
+
+    subgraph "🚧 In Progress / To Do"
+        SearchModule[🔍 Advanced Search & Filter<br/>⏳ Location Filter<br/>⏳ Salary Range<br/>⏳ Experience Level<br/>⏳ Industry Category<br/>⏳ Date Posted]
+        
+        TrackingModule[📊 Multi-Stage Tracking<br/>⏳ Stage Management<br/>⏳ Status Transitions<br/>⏳ Timeline View<br/>⏳ Stage Notifications]
+        
+        ContractModule[📄 Digital Contract Module<br/>⏳ Contract Templates<br/>⏳ E-Signature Integration<br/>⏳ Contract Creation<br/>⏳ Renewal Workflow<br/>⏳ Dissolution with Penalty]
+        
+        MessageModule[💬 Stage-Based Messaging<br/>⏳ Messaging System<br/>⏳ Stage Restrictions<br/>⏳ Thread Management<br/>⏳ Read Receipts]
+        
+        AIModule[🤖 AI Recommendation<br/>⏳ ML-knn Integration<br/>⏳ Collaborative Filtering<br/>⏳ Content-Based Filtering<br/>⏳ Job Recommendations<br/>⏳ Candidate Recommendations]
+        
+        NotifyModule[🔔 Notification System<br/>⏳ Email Notifications<br/>⏳ In-App Notifications<br/>⏳ Real-time Updates<br/>⏳ Notification Preferences]
+        
+        AdminModule[🛡️ Admin Panel<br/>⏳ User Management<br/>⏳ Job Moderation<br/>⏳ Contract Oversight<br/>⏳ Analytics Dashboard<br/>⏳ Dispute Resolution]
+        
+        AnalyticsModule[📈 Analytics & Reports<br/>⏳ Hiring Metrics<br/>⏳ Time-to-Hire Stats<br/>⏳ Candidate Pipeline<br/>⏳ Platform Statistics]
+        
+        FileModule[📁 File Management<br/>⏳ CV Upload<br/>⏳ Document Storage<br/>⏳ Cloudinary Integration<br/>⏳ File Validation]
+    end
+
+    subgraph "🔮 Future Enhancements"
+        MobileApp[📱 Mobile App<br/>React Native / Flutter]
+        VideoInterview[🎥 Video Interview<br/>Integration]
+        BackgroundCheck[🔍 Background Verification<br/>Third-party Integration]
+        PaymentGateway[💳 Payment Processing<br/>Contract Penalties]
+    end
+
+    %% Dependencies
+    AuthModule --> UserModule
+    AuthModule --> JobModule
+    AuthModule --> AppModule
+    AuthModule --> SearchModule
+    AuthModule --> TrackingModule
+    AuthModule --> ContractModule
+    AuthModule --> MessageModule
+    AuthModule --> AdminModule
+    
+    UserModule --> AppModule
+    UserModule --> AIModule
+    UserModule --> NotifyModule
+    
+    JobModule --> SearchModule
+    JobModule --> AppModule
+    JobModule --> AIModule
+    
+    AppModule --> TrackingModule
+    AppModule --> MessageModule
+    AppModule --> ContractModule
+    AppModule --> NotifyModule
+    
+    TrackingModule --> MessageModule
+    TrackingModule --> NotifyModule
+    
+    ContractModule --> FileModule
+    ContractModule --> NotifyModule
+    
+    MessageModule --> NotifyModule
+    
+    AIModule --> JobModule
+    AIModule --> AppModule
+    AIModule --> UserModule
+    
+    AdminModule --> UserModule
+    AdminModule --> JobModule
+    AdminModule --> ContractModule
+    AdminModule --> AnalyticsModule
+    
+    AnalyticsModule --> JobModule
+    AnalyticsModule --> AppModule
+    AnalyticsModule --> UserModule
+
+    %% Styling
+    classDef completed fill:#27ae60,stroke:#229954,stroke-width:3px,color:#fff
+    classDef inprogress fill:#f39c12,stroke:#d68910,stroke-width:3px,color:#000
+    classDef future fill:#95a5a6,stroke:#7f8c8d,stroke-width:2px,color:#000
+
+    class AuthModule,UserModule,JobModule,AppModule completed
+    class SearchModule,TrackingModule,ContractModule,MessageModule,AIModule,NotifyModule,AdminModule,AnalyticsModule,FileModule inprogress
+    class MobileApp,VideoInterview,BackgroundCheck,PaymentGateway future
+
+
+
+
+

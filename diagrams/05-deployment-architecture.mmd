@@ -1,0 +1,117 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#16a085','primaryTextColor':'#fff','primaryBorderColor':'#138d75','lineColor':'#34495e','secondaryColor':'#3498db','tertiaryColor':'#fff'}}}%%
+
+graph TB
+    subgraph "User Devices"
+        Mobile[📱 Mobile Devices<br/>iOS, Android Browsers]
+        Desktop[💻 Desktop/Laptop<br/>Windows, Mac, Linux]
+        Tablet[📱 Tablets<br/>iPad, Android Tablets]
+    end
+
+    subgraph "CDN & Load Balancer"
+        CDN[Cloudflare CDN<br/>Static Assets, Caching]
+        LB[Load Balancer<br/>Traffic Distribution]
+    end
+
+    subgraph "Production Environment - Cloud Infrastructure"
+        subgraph "Application Servers"
+            App1[Next.js App Server 1<br/>Node.js Runtime]
+            App2[Next.js App Server 2<br/>Node.js Runtime<br/>Auto-Scaling]
+        end
+        
+        subgraph "Database Cluster"
+            MongoPrimary[(MongoDB Primary<br/>Read/Write)]
+            MongoSecondary[(MongoDB Secondary<br/>Read Replica)]
+            MongoBackup[(MongoDB Backup<br/>Daily Snapshots)]
+        end
+        
+        subgraph "File Storage"
+            CloudinaryStorage[Cloudinary<br/>Images, Documents, CVs]
+            S3Backup[AWS S3 / Backup<br/>Contract Archives]
+        end
+    end
+
+    subgraph "External Services"
+        EmailProvider[Email Service<br/>SendGrid / Nodemailer<br/>SMTP]
+        ESignService[E-Signature API<br/>DocuSign / HelloSign<br/>Digital Contracts]
+        MLService[ML Recommendation<br/>ml-knn / ML.js<br/>Node.js Service]
+        Monitoring[Monitoring & Logging<br/>Sentry / LogRocket<br/>Error Tracking]
+    end
+
+    subgraph "Development & Staging"
+        DevServer[Development Server<br/>Local / Vercel Preview]
+        StagingServer[Staging Server<br/>Vercel / AWS]
+        TestDB[(Test Database<br/>MongoDB Atlas)]
+    end
+
+    subgraph "CI/CD Pipeline"
+        GitHub[GitHub Repository<br/>Source Code]
+        GitHubActions[GitHub Actions<br/>Automated Testing]
+        Build[Build Process<br/>Next.js Build]
+        Deploy[Deploy to Production<br/>Vercel / AWS]
+    end
+
+    %% User to CDN
+    Mobile --> CDN
+    Desktop --> CDN
+    Tablet --> CDN
+
+    %% CDN to Load Balancer
+    CDN --> LB
+
+    %% Load Balancer to App Servers
+    LB --> App1
+    LB --> App2
+
+    %% App Servers to Database
+    App1 --> MongoPrimary
+    App2 --> MongoPrimary
+    App1 --> MongoSecondary
+    App2 --> MongoSecondary
+    MongoPrimary --> MongoSecondary
+    MongoPrimary --> MongoBackup
+
+    %% App Servers to File Storage
+    App1 --> CloudinaryStorage
+    App2 --> CloudinaryStorage
+    CloudinaryStorage --> S3Backup
+
+    %% App Servers to External Services
+    App1 --> EmailProvider
+    App2 --> EmailProvider
+    App1 --> ESignService
+    App2 --> ESignService
+    App1 --> MLService
+    App2 --> MLService
+    App1 --> Monitoring
+    App2 --> Monitoring
+
+    %% CI/CD Flow
+    GitHub --> GitHubActions
+    GitHubActions --> Build
+    Build --> Deploy
+    Deploy --> App1
+    Deploy --> App2
+
+    %% Development Flow
+    DevServer --> TestDB
+    StagingServer --> TestDB
+
+    %% Styling
+    classDef user fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    classDef infrastructure fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#000
+    classDef database fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    classDef external fill:#f39c12,stroke:#d68910,stroke-width:2px,color:#000
+    classDef dev fill:#95a5a6,stroke:#7f8c8d,stroke-width:2px,color:#000
+    classDef cicd fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#fff
+
+    class Mobile,Desktop,Tablet user
+    class CDN,LB,App1,App2 infrastructure
+    class MongoPrimary,MongoSecondary,MongoBackup,CloudinaryStorage,S3Backup database
+    class EmailProvider,ESignService,MLService,Monitoring external
+    class DevServer,StagingServer,TestDB dev
+    class GitHub,GitHubActions,Build,Deploy cicd
+
+
+
+
+

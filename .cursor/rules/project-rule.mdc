@@ -1,0 +1,135 @@
+JobBridge Nepal: Next.js Modular Development Guide
+📁 Project Structure & Naming Conventions
+⚠️ Critical Rule: All Names in Lowercase Kebab-Case
+ALL file and folder names must be lowercase kebab-case (e.g., job-card.component.tsx). No PascalCase or camelCase for file names.
+
+File Naming Pattern
+Format: name.type.ts or name.type.tsx
+
+job-list.component.tsx (UI)
+
+use-application-status.hook.ts (Logic)
+
+contract-generator.service.ts (Business logic/API)
+
+auth.middleware.ts (Next.js Middleware)
+
+Folder Naming Pattern
+Singular for feature modules: job-management/, contract-signing/
+
+Plural for shared collections: components/, hooks/, services/
+
+🏗️ Modular Architecture (Domain-Driven)
+The project is organized by Feature Modules. Each module is self-contained, representing a core objective of JobBridge Nepal.
+
+src/
+├── app/                   # Next.js App Router (Routes & Layouts)
+│   ├── (auth)/            # Grouped auth routes
+│   ├── (dashboard)/       # Grouped protected routes
+│   │   ├── jobs/          # Job browsing & management
+│   │   └── contracts/     # Digital NDA/Contract routes
+│   └── api/               # Route Handlers (Backend logic)
+│
+├── modules/               # Core Feature Modules
+│   ├── ai-recommendation/ # KNN-based matching logic 
+│   ├── application-tracking/ # Multi-stage status updates [cite: 33]
+│   ├── contract-management/ # E-signature & NDA logic [cite: 36]
+│   └── messaging/         # Stage-based communication [cite: 38]
+│
+├── components/            # Shared UI (Buttons, Inputs, Modals)
+├── core/                  # Global configs, axios instances, constants
+└── lib/                   # External library wrappers (e.g., ml-knn) 
+🛠️ Core Technology Stack
+Framework: Next.js 15+ (App Router)
+
+Language: TypeScript
+
+
+Backend: Node.js (via Next.js Route Handlers) 
+
+
+AI Engine: ml-knn for personalized suggestions 
+
+
+
+Styling: Tailwind CSS (Mobile-responsive for Nepal's market) 
+
+
+State Management: React Query (Server state), Zustand/Redux (Client state)
+
+
+Security: RBAC (Role-Based Access Control) 
+
+📑 Feature Module Standards
+1. Application Tracking System (ATS) 
+
+Each stage update must trigger a notification.
+
+File: modules/application-tracking/services/tracking.service.ts
+
+Logic: Use a state machine to move applicants from "Applied" to "Interview" to "Hired/Rejected".
+
+2. AI Recommendation Module 
+
+
+
+Implementation: Integrate ml-knn within the Node.js backend environment.
+
+Naming: modules/ai-recommendation/utils/knn-engine.utils.ts
+
+
+Requirement: Fallback to rule-based filtering if dataset is too small.
+
+3. Digital Contract & NDA 
+
+
+Implementation: Secure creation and signing of employment agreements.
+
+
+Safety: Platform facilitates signatures but does not provide legal enforcement.
+
+Folder: modules/contract-management/components/signature-pad.component.tsx
+
+📐 Development Guidelines
+1. File Size & Responsibility
+Limit: Max 500 lines per file.
+
+Extraction: If a job listing component grows too large, extract job-details.component.tsx and application-form.component.tsx.
+
+2. Server vs. Client Components
+Server Components: Use for data fetching (Job listings, Profile data).
+
+Client Components: Use for interactive forms, signature pads, and real-time messaging tabs.
+
+3. Error & Loading States
+
+Requirement: Every feature must include a loading.tsx and error.tsx in its respective app/ directory to ensure smooth UX for mobile-first users in Nepal.
+
+
+🎨 Design & Color Management
+Following the Apple + Financial Excellence style from your guide:
+
+Primary: #007AFF (Apple Blue) for action buttons.
+
+Status Colors:
+
+Success: Green for "Hired" or "Signed".
+
+Warning: Orange for "Interview Scheduled".
+
+Danger: Red for "Rejected" or "Dissolved".
+
+CSS Variables: Use var(--primary-text) and var(--background-color) to support Dark/Light mode.
+
+🚀 Deployment & Roadmap
+
+Methodology: Waterfall Prototype Model.
+
+
+Timeline: 12 Weeks total.
+
+
+Current Goal: Complete Phase 1 (Requirement Analysis) and Phase 2 (System Design).
+---
+alwaysApply: true
+---
